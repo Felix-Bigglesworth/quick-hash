@@ -1,2 +1,3 @@
 # Dummy Files
-*/file_*.dat
+*file_*.dat
+/__pycache__
