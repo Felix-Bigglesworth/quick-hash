@@ -27,6 +27,11 @@ while [[ $# -gt 0 ]]; do
             RANDOM_DATA=1
             shift 1
             ;;
+        #-b)
+            # declare block size
+            #declare BLOCK_SIZE="$2"
+            #shift 2
+            #;;
         *)
             # handle positional args
             if [[ -n "$1" ]]; then BLOCK_COUNT="$1"; fi
