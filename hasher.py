@@ -1,5 +1,6 @@
 from pathlib import Path
 import xxhash
+from constants import CHUNK_SIZE
 
 """
 The xxhash library has multiple options for hashing algorithms
@@ -9,6 +10,7 @@ xxh3_64
 xxh3_128
 """
 
+
 #TODO make sure large files are read in a byte stream
 #TODO confirm the correct hash function is being used
 #TODO confirm consistency of hashes compared to the linux xxhash library 
@@ -16,12 +18,9 @@ xxh3_128
 def xxhash64(file) -> str:
     hash_factory = xxhash.xxh3_64()
     with open(file=file, mode='rb',) as f:
-        while True:
-            chunk = f.read()
-            if chunk == b'':
-                break
-            hash_factory.update(chunk)
+        while chunk := (f.read(CHUNK_SIZE)):
             #chunk = f.read()
+            hash_factory.update(chunk)
         file_hash = hash_factory.hexdigest()
         hash_factory.reset()
         return file_hash
