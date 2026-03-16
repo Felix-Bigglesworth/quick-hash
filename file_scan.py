@@ -1,13 +1,26 @@
 from pathlib import Path
+import pathlib
 from hasher import xxhash64
 from pprint import pprint
+from dataclasses import dataclass
 
 root=r'F:\_dummy_data\recursive_file_tree' 
 root=Path(root)
 
+# @dataclass()
+# class Directory:
+#     _path: pathlib.Path
+#     depth: int
+
+
+
+
+
+
+
 # Get a full file list
 # outputs a legth=3 tuple with the following:
-# 1. Path
+
 file_list = []
 
 # add all files to a list while skipping directories
