@@ -1,6 +1,7 @@
 
 from pathlib import Path, PurePosixPath, PureWindowsPath
 import pathlib
+from dataclasses import dataclass
 
 # WRITE FILES
 
@@ -43,10 +44,10 @@ def str_to_path(string:str, _type):
 
 # FORMATTING
 
-def root_drive(Path):
-    pure_path = pathlib.PurePath(Path)
-    _drive, _root = (pure_path.drive, pure_path.root)
-    return ''.join([_drive, _root])
+# def root_drive(Path):
+#     pure_path = pathlib.PurePath(Path)
+#     _drive, _root = (pure_path.drive, pure_path.root)
+#     return ''.join([_drive, _root])
 
 def file_depth(file_path: pathlib.PurePath):
     file_path.parts()
@@ -74,8 +75,51 @@ def file_depth(file_path: pathlib.PurePath):
 # st_mtime_ns
 # st_ctime_ns
 # st_birthtime_ns
-# === On some unix systems ===
-# st_blocks
-# st_blksize
-# st_rdev
-# *st_type
+
+
+# The 10 elements always present are st_mode, st_ino, st_dev, st_nlink,
+# st_uid, st_gid, st_size, st_atime, st_mtime, st_ctime.
+
+def getstats(fpath:Path):
+    # format the Path.lstat() return value to a dictionary
+    s = fpath.lstat()
+    stat = {
+        'st_mode': s.st_mode,
+        'st_ino': s.st_ino,
+        'st_dev': s.st_dev,
+        'st_nlink': s.st_nlink,
+        'st_uid': s.st_uid,
+        'st_gid': s.st_gid,
+        'st_size': s.st_size,
+        'st_atime': s.st_atime,
+        'st_mtime': s.st_mtime,
+        'st_ctime': s.st_ctime,
+        'st_birthtime': s.st_birthtime
+    }
+    return stat
+    
+    
+    
+
+@dataclass
+class FileStats:
+    st_mode: int        # file type and file mode bits (permissions)
+    st_ino: int         # Unix:inode; Windows=fileindex (each file on a st_dev has a unique value)
+    st_dev: int         # indentifier for the device a file resides on
+    st_nlink: int       # Number of hard links
+    st_uid: int         # User identifier (file owner)
+    st_gid: int         # Group identifier (file owner)
+    st_size: int        # file size in bytes (for a symlink its the size of the pathname it contains)
+    st_atime: float     # time of most recent access (in seconds)
+    st_mtime: float     # time of most recent content modification
+    st_ctime: float     # Unix: time of the most recent metadata change; Windows:depricated
+    st_birthtime: float # Time of file creation
+    
+    # # Unix only:
+    # st_blocks: float
+    # st_blksize: float
+    
+    # # On windows: 
+    # st_file_attributes: None
+    # st_reparse_tag: None
+    
