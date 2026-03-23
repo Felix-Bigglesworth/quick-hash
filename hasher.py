@@ -19,7 +19,6 @@ def xxhash64(file) -> str:
     hash_factory = xxhash.xxh3_64()
     with open(file=file, mode='rb',) as f:
         while chunk := (f.read(CHUNK_SIZE)):
-            #chunk = f.read()
             hash_factory.update(chunk)
         file_hash = hash_factory.hexdigest()
         hash_factory.reset()
