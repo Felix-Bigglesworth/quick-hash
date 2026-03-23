@@ -1,5 +1,5 @@
 def main():
-    print("WORK IN PROGRESS")
+    print("Hello from file-checker!")
 
 
 if __name__ == "__main__":

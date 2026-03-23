@@ -10,6 +10,7 @@ def project_dir() -> Path:
     
 
 # WRITE FILES
+
 def append_newlines_list(lines: list[Path]):
     # append a \n character to each list entry
     return [str(f) + '\n' for f in lines]
@@ -27,6 +28,7 @@ def write_tree_to_file(root_dir:Path, outfile:Path):
 
 
 # READ FILES
+
 def load_file_list(fpath:Path, os_type=None):
     with open(file=fpath,mode='r') as handle:
         lines = [str_to_path(line, _type=os_type) for line in handle.readlines()]
@@ -53,7 +55,8 @@ def str_to_path(string:str, _type):
 #     _drive, _root = (pure_path.drive, pure_path.root)
 #     return ''.join([_drive, _root])
 
-
+def file_depth(file_path: pathlib.PurePath):
+    file_path.parts()
     
 
 # ==== FILE DATA ====
