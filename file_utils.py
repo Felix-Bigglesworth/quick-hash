@@ -2,12 +2,6 @@
 from pathlib import Path, PurePosixPath, PureWindowsPath
 import pathlib
 from dataclasses import dataclass
-import os
-
-def project_dir() -> Path:
-    # gets the projects current working directory as a Path
-    return Path(os.getcwd()).resolve()
-    
 
 # WRITE FILES
 
