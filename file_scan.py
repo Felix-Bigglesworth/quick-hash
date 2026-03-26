@@ -53,7 +53,7 @@ class ExtendedPath(Path):
         super().__init__(*args)
         log.debug('initializeing extendedpath: windows=%s posix=%s', isinstance(self, PureWindowsPath), isinstance(self, PurePosixPath))
         _stat = self.stat()
-        self.size = _stat.st_size
+        self.size = _stat.st_size # in bytes
         self.modified = _stat.st_mtime
         self.created = _stat.st_birthtime \
             if hasattr(self, 'st_birthtime') \
@@ -100,13 +100,14 @@ class ExtendedPath(Path):
         
         try:
             with open(file=self, mode='rb',) as f:
-                chunk_count = itertools.count()
+                _chunk_count = 0
+                chunk_counter = itertools.count()
                 while chunk := (f.read(CHUNK_SIZE)):
-                    next(chunk_count)
+                    _chunk_count = next(chunk_counter)
                     hasher.update(chunk)
-                    log.debug('chunks_processed: %i', chunk_count)
-            file_hash = hasher.hexdigest()
-            log.debug('Chunks processed: %i | Hash: %s \nfile: %s', chunk_count, str(file_hash), str(self))
+                    #log.debug('chunks_processed: %i', _chunk_count)
+                file_hash = hasher.hexdigest()
+                log.debug('file: %s\n\t\t\t\tHash: %s | chunk_size: %i = Chunks processed: %i | ', str(self), str(file_hash), CHUNK_SIZE, _chunk_count) # type: ignore
         except FileNotFoundError:
             log.warning('file %s not found', self.name)
             file_hash = ''
@@ -135,14 +136,14 @@ class ExtendedPath(Path):
     
 
 if __name__ == '__main__':
-    ex = ExtendedPath(
-        '/home/cdpacheco/Documents/GitHub'
-        )
-    print(
-    ex.created
-    )
-    print(
-    time.localtime(ex.modified)
-    )
+    file = ExtendedPath(r"D:\cdpacheco_jburks\lzw_comet_testing\comet_55ch_12bit_39545x36566_lzw.ome.tiff")
+    #file = ExtendedPath(r"D:\cdpacheco_jburks\lzw_comet_testing\comet_55ch_12bit_39545x36566_no-compression.ome.tiff")
+    start_t = time.perf_counter()
+    f_hash = file.file_hash()
+    stop_t = time.perf_counter()
+    delta_t = stop_t - start_t
+    log.info(f'Time to run: {delta_t}')
+    
+    
     
     
