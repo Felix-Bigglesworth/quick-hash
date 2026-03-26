@@ -107,7 +107,7 @@ class ExtendedPath(Path):
                     hasher.update(chunk)
                     #log.debug('chunks_processed: %i', _chunk_count)
                 file_hash = hasher.hexdigest()
-                log.debug('file: %s\n\t\t\t\tHash: %s | chunk_size: %i = Chunks processed: %i | ', str(self), str(file_hash), CHUNK_SIZE, _chunk_count) # type: ignore
+                log.debug('file: %s | Hash: %s | chunk_size: %i = Chunks processed: %i | ', str(self), str(file_hash), CHUNK_SIZE, _chunk_count) # type: ignore
         except FileNotFoundError:
             log.warning('file %s not found', self.name)
             file_hash = ''
@@ -143,7 +143,3 @@ if __name__ == '__main__':
     stop_t = time.perf_counter()
     delta_t = stop_t - start_t
     log.info(f'Time to run: {delta_t}')
-    
-    
-    
-    
