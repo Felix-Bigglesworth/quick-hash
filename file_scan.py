@@ -51,7 +51,7 @@ class ExtendedPath(Path):
 
     def __init__(self, *args):
         super().__init__(*args)
-        log.debug('initializeing extendedpath: windows=%s posix=%s', isinstance(self, PureWindowsPath), isinstance(self, PurePosixPath))
+        #log.debug('initializeing extendedpath: windows=%s posix=%s', isinstance(self, PureWindowsPath), isinstance(self, PurePosixPath))
         _stat = self.stat()
         self.size = _stat.st_size # in bytes
         self.modified = _stat.st_mtime
@@ -64,9 +64,9 @@ class ExtendedPath(Path):
         _attributes = {
             self.size
         }
-        logging.debug('size=%(size)d | modified=%(modified)d | created=%(created)d | hard_links=%(hard_links)i',
+        logging.debug('size=%(size)d MB | modified=%(modified)d | created=%(created)d | hard_links=%(hard_links)i',
                          {
-                          'size':self.size, 
+                          'size':self.size / (1024 ** 2), 
                           'modified':self.modified, 
                           'created':self.created, 
                           'hard_links':self.hard_links,
@@ -94,6 +94,9 @@ class ExtendedPath(Path):
         return str(self)
     
     def file_hash(self) -> str:
+        #TODO make sure large files are read in a byte stream
+        #TODO confirm the correct hash function is being used
+        #TODO confirm consistency of hashes compared to the linux xxhash library when using `xxhsum -H3 ./file` command
         log.debug('hashing %s', str(self))
 
         hasher = xxhash.xxh3_64()
@@ -107,7 +110,7 @@ class ExtendedPath(Path):
                     hasher.update(chunk)
                     #log.debug('chunks_processed: %i', _chunk_count)
                 file_hash = hasher.hexdigest()
-                log.debug('file: %s | Hash: %s | chunk_size: %i = Chunks processed: %i | ', str(self), str(file_hash), CHUNK_SIZE, _chunk_count) # type: ignore
+                log.debug('file: %s | Hash: %s | chunk_size: %i MB | Chunks processed: %i | ', str(self), str(file_hash), (CHUNK_SIZE / (1024 **2)), _chunk_count) # type: ignore
         except FileNotFoundError:
             log.warning('file %s not found', self.name)
             file_hash = ''
@@ -142,4 +145,4 @@ if __name__ == '__main__':
     f_hash = file.file_hash()
     stop_t = time.perf_counter()
     delta_t = stop_t - start_t
-    log.info(f'Time to run: {delta_t}')
+    log.info(f'Time to run: {delta_t} seconds')
