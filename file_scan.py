@@ -1,30 +1,27 @@
 import itertools
 import logging
-import pathlib
 from pathlib import Path, PurePosixPath, PureWindowsPath
 import os
 from os import PathLike
 import sys
-from hasher import xxhash64
 from pprint import pprint as pp
-from dataclasses import dataclass
 import xxhash
 import time
 from constants import CHUNK_SIZE
 
 logging.basicConfig(
-    level=logging.DEBUG,                          # Minimum level to capture
+    level=logging.DEBUG,                                   # Minimum level to capture
     format="%(asctime)s | %(levelname)-8s | %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
     handlers=[
-        logging.StreamHandler(),                  # Print to console
+        logging.StreamHandler(),                           # Print to console
         logging.FileHandler("my_script.log"),     # Also write to file
     ]
 )
 log = logging.getLogger(__name__)
 
 # PLATFORM = sys.platform # SYSTEM_OS: 'win32' or 'linux'
-log.info('Platform=%s | Script: %s', __file__, sys.platform)
+log.info('SCRIPT STARTING... | Platform=%s | Script: %s', __file__, sys.platform)
 
 
 
@@ -72,7 +69,7 @@ class ExtendedPath(Path):
                           'hard_links':self.hard_links,
                           })
         
-
+    
     
     @property    
     def depth(self) -> int:
@@ -94,6 +91,10 @@ class ExtendedPath(Path):
         return str(self)
     
     def file_hash(self) -> str:
+        """
+        The xxhash library has multiple options for hashing algorithms
+        xxhash32, xxhash64, xxh3_64, xxh3_128
+        """
         #TODO make sure large files are read in a byte stream
         #TODO confirm the correct hash function is being used
         #TODO confirm consistency of hashes compared to the linux xxhash library when using `xxhsum -H3 ./file` command
