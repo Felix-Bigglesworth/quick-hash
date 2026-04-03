@@ -1,8 +1,8 @@
 import itertools
+from collections.abc import Iterator
 import logging
 from pathlib import Path, PurePosixPath, PureWindowsPath
 import os
-from os import PathLike
 import sys
 from pprint import pprint as pp
 import xxhash
@@ -27,7 +27,7 @@ log.info('SCRIPT STARTING... | Platform=%s | Script: %s', __file__, sys.platform
 
 
 # Walking the filesystem can be done using either pathlib.Path.walk() or pathlib.path.rglob()
-def walk_directory(start:Path):
+def walk_directory(start:Path) -> Iterator[Path]:
     # recursively search the given directory for all subdirectories and files.
     # Note: includes the starting directory itself
     return start.rglob(pattern='**')
